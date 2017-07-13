@@ -13,6 +13,7 @@ import ils.persistence.domainclasses.Subject;
 import ils.persistence.domainclasses.Topic;
 import ils.persistence.domainclasses.embeddables.RecordStatus;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -221,10 +222,10 @@ public class QuestionBankDataRepository {
              return qPlainList;	 
 	 }	
 	 
-
+	 private final String UPLOADED_QUESTION_FILE_PATH = "C:\\Users\\sanjay.verma\\git\\IQPoint\\Simple\\src\\main\\webapp\\files\\questions\\";
 	 
 	 @Transactional
-	 public QuestionPlain saveQuestion(String qId,String question,String optionFirst,String optionSecond,String optionThird,String optionFourth,String answer,String maxMarks) throws Exception
+	 public QuestionPlain saveQuestion(String qId,String question,String optionFirst,String optionSecond,String optionThird,String optionFourth,String answer,String maxMarks,String imageUrl) throws Exception
 	 {
 		 
 		     Question ques=em.find(Question.class,new Long(qId));
@@ -237,6 +238,18 @@ public class QuestionBankDataRepository {
 		     ques.setOptionFourth(optionFourth);
 		     ques.setAnswer(answer);
 		     ques.setMaxMarks(new Float(maxMarks));
+		     
+		     //before setting new image url, first check if the image file has changed
+		     //if it has changed then remove the first one
+		     
+				//first get the existing photourl and remove the file currently existing file, cleaning activity
+				String existingFile = ques.getImageUrl().trim();
+				if (existingFile!=null && !existingFile.equalsIgnoreCase(imageUrl)) {
+				   File file=new File(UPLOADED_QUESTION_FILE_PATH+existingFile);
+				   file.delete();
+				}	     
+		     
+		     ques.setImageUrl(imageUrl);
 		     
 		     //preparing and sending plain question object
 		     QuestionPlain qpp = new QuestionPlain();
@@ -251,6 +264,7 @@ public class QuestionBankDataRepository {
 			 qpp.setOptionFourth(ques.getOptionFourth());
 			 qpp.setAnswer(ques.getAnswer());
 			 qpp.setMaxMarks(ques.getMaxMarks().toString());
+			 qpp.setImageUrl(imageUrl);
 		     
 
 			 

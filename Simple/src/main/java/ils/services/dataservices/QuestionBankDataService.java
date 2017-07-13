@@ -269,20 +269,21 @@ public class QuestionBankDataService {
 	@POST
     @Path("/questionbank/saveQuestion")
     @Produces(MediaType.TEXT_HTML)	
-	public Response saveQuestion(@FormParam("id") String qId,
+	public Response saveQuestion(				@FormParam("id") String qId,
 												@FormParam("question") String question,
 												@FormParam("optionFirst") String optionFirst,
 												@FormParam("optionSecond") String optionSecond,
 												@FormParam("optionThird") String optionThird,
 												@FormParam("optionFourth") String optionFourth,
 												@FormParam("answer") String answer,
-												@FormParam("maxMarks") String maxMarks)
+												@FormParam("maxMarks") String maxMarks,
+												@FormParam("imageUrl") String imageUrl)
 	{
 
 		QuestionPlain ques=null;
 		QuestionBankDataRepository exRep= (QuestionBankDataRepository)SpringApplicationContext.getBean("QuestionBankDataAccessBean");
 		try {
-			ques=exRep.saveQuestion(qId,question,optionFirst,optionSecond,optionThird,optionFourth,answer,maxMarks);
+			ques=exRep.saveQuestion(qId,question,optionFirst,optionSecond,optionThird,optionFourth,answer,maxMarks,imageUrl);
 		    
 		} catch(javax.persistence.NoResultException nr) {
 			ques=null;

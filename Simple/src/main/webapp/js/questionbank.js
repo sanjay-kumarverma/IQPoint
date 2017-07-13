@@ -1315,6 +1315,7 @@ $(document).ready(function(){
 			var manswer=$('#answer'+qid).val();
 			var mmarks=$('#maxMarks'+qid).val();
 			var questionTypeVal=$( "#qb-questionType option:selected").val();
+			var imageUrl=$('#imageUrl').val();
 			
 			//console.log(mQuestion);
 			var isNotBlanks=checkBlanks(mQuestion,moptionFirst,moptionSecond,moptionThird,moptionFourth,manswer,mmarks);
@@ -1339,7 +1340,7 @@ $(document).ready(function(){
 			else {
 			
 					//prepare objet of data
-					var qData={"id":qid,"question":mQuestion,"optionFirst":moptionFirst,"optionSecond":moptionSecond,"optionThird":moptionThird,"optionFourth":moptionFourth,"answer":manswer,"maxMarks":mmarks,"_csrf":_csrf};
+					var qData={"id":qid,"question":mQuestion,"optionFirst":moptionFirst,"optionSecond":moptionSecond,"optionThird":moptionThird,"optionFourth":moptionFourth,"answer":manswer,"maxMarks":mmarks,"imageUrl":imageUrl,"_csrf":_csrf};
 					
 			           $.post("resteasy/qb/questionbank/saveQuestion",qData)
 			    		
