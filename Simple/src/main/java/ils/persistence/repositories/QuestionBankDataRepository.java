@@ -243,7 +243,7 @@ public class QuestionBankDataRepository {
 		     //if it has changed then remove the first one
 		     
 				//first get the existing photourl and remove the file currently existing file, cleaning activity
-				String existingFile = ques.getImageUrl().trim();
+				String existingFile = ques.getImageUrl();
 				if (existingFile!=null && !existingFile.equalsIgnoreCase(imageUrl)) {
 				   File file=new File(UPLOADED_QUESTION_FILE_PATH+existingFile);
 				   file.delete();

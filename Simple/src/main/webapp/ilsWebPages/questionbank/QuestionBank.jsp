@@ -301,6 +301,28 @@
       </div> 
   </div>
   </div>  
+  
+    <div id="qb-photo" class="w3-modal">
+    <div class="w3-modal-content w3-animate-zoom w3-card-8 w3-pale-green">
+      <header class="w3-container w3-green"> 
+        <span onclick="document.getElementById('qb-photo').style.display='none'" 
+        class="w3-closebtn">&times;</span>
+        <h5>Upload photo</h5>
+      </header>     
+      <div id="qb-uploadPhoto" class="w3-container">
+      
+			<form id="qb-list-fileUploadForm" action="#" method="post" enctype="multipart/form-data"> 
+		
+			   <p>
+				Select photo file : <input type="file" name="uploadFile" size="50" />
+			   </p>
+		       <input type="hidden" id="upload-questionid" name="upload-questionid" />
+			   <input type="button" id="qb-list-butUploadIt" value="Upload It" />
+			</form>    
+        
+      </div>
+    </div>
+  </div>   
 
 </body>
 </html>

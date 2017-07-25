@@ -669,8 +669,8 @@
 				 var nextDisabled=$('#nextQuestion').is(':disabled');
 				 var prevDisabled=$('#prevQuestion').is(':disabled');
 				 
-				 console.log("Next button-->"+nextDisabled);
-				 console.log("Prev button-->"+prevDisabled);
+				 //console.log("Next button-->"+nextDisabled);
+				 //console.log("Prev button-->"+prevDisabled);
 				 
 				 if (nextDisabled)
 					 $('#nextQuestion').attr('disabled','disabled');
@@ -959,7 +959,9 @@
         	
         	//console.log(qstr);
         	$(qstr).appendTo('#questionSection');
-        	
+        	if (jsonQuestion.imageUrl=="")
+        		$('#quesPhoto').attr('disabled','disabled');
+
         	$('#saveQuestion').attr('disabled','disabled');
         	
         	if (jsonQuestion.questionType=="1") {
@@ -980,8 +982,21 @@
         		
         	}
 			 
-			 
-			 
+		 var photoid='questionPhoto';
+		 if (jsonQuestion.imageUrl!="") {
+			  var photohtml='<div id="exam-dispPhoto"><span>Image attached, click to zoom : </span><img id="questionPhoto-tag" src="" style="width:5%;cursor:zoom-in"  onclick="document.getElementById(\''+photoid+'\').style.display=\'block\'">'+
+			  '<div id="questionPhoto" class="w3-modal" onclick="this.style.display=\'none\'">'+
+			  '<span class="w3-closebtn w3-hover-red w3-container w3-padding-16 w3-display-topright">&times;</span>'+
+			  '<div class="w3-modal-content w3-animate-zoom">'+
+			  '<img id="exam-zoom-questionPhoto" src="" style="width:100%">'+
+			  '</div>'+
+			  '</div></div>';
+			  $('#exam-dispPhoto').remove();
+			  $('#exam-PhotoDiv').append(photohtml);
+			  $('#questionPhoto-tag').attr('src',jsonQuestion.imageUrl);
+			  $('#exam-zoom-questionPhoto').attr('src',jsonQuestion.imageUrl);
+		      //$('#exam-zoom-questionPhoto').removeAttr('disabled');
+		  }
 			 
 			 
 			//setup next and prev buttons

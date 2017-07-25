@@ -50,10 +50,25 @@
 			        <input type="hidden" id="questionId" name="questionId" />
 			        <input type="hidden" id="questionTypeId" name="questionTypeId" />
               </div>
-   	         <div class="w3-center"> <button id="prevQuestion" class="w3-button w3-blue" >Prev</button>
+   	         <div class="w3-center">
+   	            <button id="prevQuestion" class="w3-button w3-blue" >Prev</button>
                 <button id="nextQuestion" class="w3-button w3-green" >Next</button>
                 <button id="saveQuestion" class="w3-button w3-yellow" >Save</button>
-             </div>         
+             </div>   
+
+			 					<div id="exam-PhotoDiv" class="w3-container">
+			 					  <div id="exam-dispPhoto">
+<!-- 								  <span>Image attached, click to zoom : </span><img id="questionPhoto-tag" src="" style="width:5%;cursor:zoom-in"  onclick="document.getElementById('questionPhoto').style.display='block'">
+								  
+								  <div id="questionPhoto" class="w3-modal" onclick="this.style.display='none'">
+								    <span class="w3-closebtn w3-hover-red w3-container w3-padding-16 w3-display-topright">&times;</span>
+								    <div class="w3-modal-content w3-animate-zoom">
+								       <img id="exam-zoom-questionPhoto" src="" style="width:70%">
+								    </div>
+								  </div> -->
+								  </div>
+								</div>	  
+                  
         </div>
 
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />  

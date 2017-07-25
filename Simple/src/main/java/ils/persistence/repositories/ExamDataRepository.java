@@ -200,6 +200,10 @@ public class ExamDataRepository {
 			 qpp.setOptionThird(question.getOptionThird());
 			 qpp.setOptionFourth(question.getOptionFourth());
 			 qpp.setMaxMarks(question.getMaxMarks().toString());
+			 if (question.getImageUrl()==null || question.getImageUrl()=="") 
+				 qpp.setImageUrl("");
+			  else
+			     qpp.setImageUrl(question.getImageUrl());
 			 
 			 
 			 return qpp;		 

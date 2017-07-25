@@ -1004,9 +1004,9 @@ $(document).ready(function(){
 					   
 					   var imageUrlStr="";
 					   if(value.imageUrl == "" || value.imageUrl== null)
-						   imageUrlStr="";
+						   imageUrlStr='<td class="w3-text-blue">Image </td><td class="w3-text-black"><img id="imageUrl'+value.id+'" src="images/NoImage.jpg" style="width:10%;height:8%"/></td></tr>';
 					   else
-						   imageUrlStr='<td class="w3-text-blue">Image </td><td class="w3-text-black"><img src="files/questions/'+value.imageUrl+'" /></td></tr>';
+						   imageUrlStr='<td class="w3-text-blue">Image </td><td class="w3-text-black"><img id="imageUrl'+value.id+'" src="'+value.imageUrl+'" style="width:10%;height:8%"/></td></tr>';
 					   
 					   var topicstr="";
 					   if (questionTypeVal=="1") {
@@ -1019,8 +1019,9 @@ $(document).ready(function(){
 						   topicstr+='<tr><td class="w3-text-blue">Answer </td><td class="w3-text-black"><input type="text" id="answer'+value.id+'" value="'+value.answer+'" size="50"/></td>';
 						   topicstr+='<td class="w3-text-blue">Max Marks </td><td class="w3-text-black"><input type="text" id="maxMarks'+value.id+'" value="'+value.maxMarks+'" size="10"/></td></tr>';
 						   topicstr+=imageUrlStr;
-						   topicstr+= '<tr><td></td><td></td><td colspan="2"><button id="'+divid+'Save" class="w3-button w3-yellow w3-hover-red w3-small w3-right w3-margin-left">Save</button>';
-						   topicstr+= '<button id="'+divid+'Edit" class="w3-button w3-yellow w3-hover-red w3-small w3-right w3-margin-left">Edit</button></td></tr></table>';					   
+						   topicstr+= '<tr><td></td><td colspan="3"><button id="'+divid+'Save" class="w3-button w3-yellow w3-hover-red w3-small w3-right w3-margin-left">Save</button>';
+						   topicstr+= '<button id="'+divid+'Edit" class="w3-button w3-yellow w3-hover-red w3-small w3-right w3-margin-left">Edit</button>';
+						   topicstr+= '<button id="'+divid+'loadphoto" class="w3-button w3-yellow w3-hover-red w3-right w3-margin-left">Photo</button></td></tr></table>';
 					   } else if (questionTypeVal=="4") {
 						   topicstr='<p class="w3-text-blue"><table id="questionTable" class="w3-table-all w3-hoverable w3-small w3-center">';
 						   topicstr+='<tr><td class="w3-text-blue">Question</td><td class="w3-text-black"><input type="text" id="ques'+value.id+'" value="'+value.question+'"  size="70"/></td><td></td><td></td></tr>';
@@ -1029,6 +1030,7 @@ $(document).ready(function(){
 						   topicstr+=imageUrlStr;
 						   topicstr+= '<tr><td></td><td></td><td colspan="2"><button id="'+divid+'Save" class="w3-button w3-yellow w3-hover-red w3-small w3-right w3-margin-left">Save</button>';
 						   topicstr+= '<button id="'+divid+'Edit" class="w3-button w3-yellow w3-hover-red w3-small w3-right w3-margin-left">Edit</button></td></tr></table>';
+						   topicstr+= '<button id="'+divid+'loadphoto" class="w3-button w3-yellow w3-hover-red w3-right w3-margin-left">Photo</button>';
 						   topicstr+='<input type="hidden" id="optionFirst'+value.id+'" value="'+value.optionFirst+'" />';
 						   topicstr+='<input type="hidden" id="optionSecond'+value.id+'" value="'+value.optionSecond+'"/>';
 						   topicstr+='<input type="hidden" id="optionThird'+value.id+'" value="'+value.optionThird+'" />';
@@ -1071,6 +1073,8 @@ $(document).ready(function(){
 							}
 							$(this).attr('disabled','disabled');
 							$('#'+divid+'Save').removeAttr('disabled');
+							$('#'+divid+'loadphoto').removeAttr('disabled');
+							
 						});
 						
 						$('#'+divid+'Save').unbind().click(function(){
@@ -1078,10 +1082,15 @@ $(document).ready(function(){
 							saveQuestion(value.id,divid);
 						});
 						
-  							$('#'+value.id).click(function(){
-	  					    	  var id=$(this).next().attr('id');
-	  					    	  openAccordian(id,divid);
-	  					      });
+						$('#'+value.id).click(function(){
+  					    	  var id=$(this).next().attr('id');
+  					    	  openAccordian(id,divid);
+  					      });
+  							
+						$('#'+divid+'loadphoto').unbind().click(function() {
+							$('#upload-questionid').attr('value',value.id);
+							document.getElementById('qb-photo').style.display='block';
+						});	
   							
   							//disable all questions first
   							$('#'+value.id).find('input').attr('disabled','disabled');
@@ -1303,7 +1312,55 @@ $(document).ready(function(){
 	    	            	}
 	    	            });
 	    	    
-	     });     
+	     });   
+	        
+	        	
+	        $('#qb-list-butUploadIt').unbind().click(function(){$('#qb-list-fileUploadForm').submit(); })
+	        $('#qb-list-fileUploadForm').submit( function(e) {
+                document.getElementById('qb-photo').style.display='none';
+	    	    e.preventDefault();
+	    	    var _csrf = $("input[name='_csrf']").val();
+	    	    var currQuesId=$('#upload-questionid').val();
+	    	    console.log(currQuesId);
+	    	    //console.log(_csrf);
+	    	    //var data = $('#fileUploadForm').serialize(); // <-- 'this' is your form element
+	    	    //console.log(data);
+	    	    var form = new FormData($("#qb-list-fileUploadForm")[0]);
+	    	    //console.log(form);
+	 		   $.ajaxSetup({
+				      headers: {"X-CSRF-Token": _csrf
+				                }
+				    }); 
+	    	    $.ajax({
+	    	            url: 'resteasy/qb/upload/question/'+userId, //userid passed while uploading image for question is just for dummy purpose
+	    	            //data: form,
+	    	            data:form,
+	    	            cache: false,
+	    	            contentType: false,
+	    	            processData: false,
+	    	            type: 'POST',     
+	    	            success: function(data){
+	    	            	var jsonData=JSON.parse(data);
+	    	            	var url=jsonData.url;
+	    	            	if (url=="FileSizeOrTypeError") {
+	  				           var msg='<p>File should be image (Gif/PNG/JPEG/BMP) and size should not be more than 1 mb. Please try again.</p>';
+					           $('#alertMessage > p').remove();
+					           $(msg).appendTo('#alertMessage');	 	        	  
+					 	       document.getElementById('error').style.display='block';        	            		
+	    	            	} else {
+	        	            	//$('#imageUrl'+currQuesId).val(url); //url returned is actually stored in attribute and then saved to question in save operation
+	        	            	$('#imageUrl'+currQuesId).attr('src',url);
+	    	            	}
+	    	            },
+	    	            error:function(err){
+					           var msg='<p>There was some problem uploading image. Please try after some time.</p>';
+				           $('#examErrorMessage > p').remove();
+				           $(msg).appendTo('#examErrorMessage');	 	        	  
+				 	       document.getElementById('error').style.display='block';	
+	    	            	}
+	    	            });
+	    	    
+	     });   	        
         
 		function saveQuestion(qid,divid) {
 			var _csrf = $("input[name='_csrf']").val();
@@ -1315,7 +1372,8 @@ $(document).ready(function(){
 			var manswer=$('#answer'+qid).val();
 			var mmarks=$('#maxMarks'+qid).val();
 			var questionTypeVal=$( "#qb-questionType option:selected").val();
-			var imageUrl=$('#imageUrl').val();
+			var imageUrl=$('#imageUrl'+qid).attr('src');
+			console.log('save question image url'+imageUrl);
 			
 			//console.log(mQuestion);
 			var isNotBlanks=checkBlanks(mQuestion,moptionFirst,moptionSecond,moptionThird,moptionFourth,manswer,mmarks);
@@ -1512,6 +1570,7 @@ $(document).ready(function(){
 	    $('#'+id).find('input').attr('disabled','disabled');
 	    $('#'+divid+'Edit').removeAttr('disabled');
 	    $('#'+divid+'Save').attr('disabled','disabled');
+	    $('#'+divid+'loadphoto').attr('disabled','disabled');
 	}	
 	
 	function qp_openAccordian(id) {
