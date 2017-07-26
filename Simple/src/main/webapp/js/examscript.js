@@ -684,9 +684,20 @@
 	        	var _csrf = $("input[name='_csrf']").val();
 	        	//alert("question id"+qid);
 	        	var answer="";
-	        	if (questionType=='1') {
+	        	   if (questionType=='1') {
 	        	       answer = $("input[name='qoption']:checked"). val(); 
-	        	   }  else if (questionType=='4') {
+	        	   }
+	        	   else if (questionType=='2') {
+	        	       //answer = $("input[name='qoption']:checked"). val(); 
+	        	       $.each($("input[name='qoption']:checked"), function(index,value) {
+	        	    	   if (index==0) 
+	        	       	        answer=answer+$(this).val();
+	        	           else
+	        	        	    answer=answer+","+$(this).val();
+	        	    	 });
+			           console.log(answer);
+	        	   }	        	   
+	        	   else if (questionType=='4') {
 	        		   answer = $('#qanswer').val();
 	        	   }
 	        		   
@@ -900,12 +911,23 @@
 		                   success : function(question) {
 		                	   						  var jsonQuestion = JSON.parse(question);
 		                	                          displayQuestion(jsonQuestion,questionids);
-		                	                          
+		                	                          //console.log("current answer"+answerSelectedJson.answer);
 		                	                          //setting answer if answer is already given
-		                	                          if (typeof answerSelectedJson !== undefined ) {
+		                	                          if (typeof answerSelectedJson !== undefined && answerSelectedJson !="") {
 		                	                        	  if (jsonQuestion.questionType=='1') {
 				          							        var setstr='input[type="radio"][name="qoption"][value="'+answerSelectedJson.answer+'"]';
 				          						            $(setstr).prop('checked',true); }
+		                	                        	  else if (jsonQuestion.questionType=='2') {
+		                	                        		 //first split the answers into array
+		                	                        		  var ansarray=answerSelectedJson.answer.split(",");
+		                	                        		  //console.log(ansarray);
+			                	           	        	       $.each(ansarray, function(index,value) {
+			                	           	        	    	   //now set each of matching answer
+			                	           	        	    	   //console.log(value);
+				                	           	        	    	var setstr='input[type="checkbox"][name="qoption"][value="'+value+'"]';
+						          						            $(setstr).prop('checked',true);
+			                	        	        	    	 });
+		                	                        	    }
 		                	                        	  else if (jsonQuestion.questionType=='4') {
 		                	                        		  $('#qanswer').attr('value',answerSelectedJson.answer);
 		                	                        	  }
@@ -949,7 +971,17 @@
         	         '<p><input class="w3-radio-large" type="radio" name="qoption"  value="'+jsonQuestion.optionThird+'">'+ jsonQuestion.optionThird+'</p>'+
         	         '<p><input class="w3-radio-large" type="radio" name="qoption"  value="'+jsonQuestion.optionFourth+'">'+ jsonQuestion.optionFourth+'</p>'+
         	         '</div>';
-        	} else if (jsonQuestion.questionType=="4") {
+        	} 
+        	else if (jsonQuestion.questionType=="2") {
+       	     	 qstr='<div class="w3-section w3-margin">'+
+       	         '<p><b>Question :'+ jsonQuestion.question+'</b>&nbsp;&nbsp;('+jsonQuestion.maxMarks+')</p>'+
+       	         '<p><input class="w3-check-large" type="checkbox" name="qoption"  value="'+jsonQuestion.optionFirst+'">'+ jsonQuestion.optionFirst+'</p>'+
+       	         '<p><input class="w3-check-large" type="checkbox" name="qoption"  value="'+jsonQuestion.optionSecond+'">'+ jsonQuestion.optionSecond+'</p>'+
+       	         '<p><input class="w3-check-large" type="checkbox" name="qoption"  value="'+jsonQuestion.optionThird+'">'+ jsonQuestion.optionThird+'</p>'+
+       	         '<p><input class="w3-check-large" type="checkbox" name="qoption"  value="'+jsonQuestion.optionFourth+'">'+ jsonQuestion.optionFourth+'</p>'+
+       	         '</div>';
+       	       }        	
+        	else if (jsonQuestion.questionType=="4") {
 	       	     qstr='<div class="w3-section w3-margin">'+
 			         '<p><b>Question :'+ jsonQuestion.question+'</b>&nbsp;&nbsp;('+jsonQuestion.maxMarks+')</p>'+
 			         '<p><input class="w3-input" type="text" id="qanswer" name="qanswer" /></p>'+
@@ -968,7 +1000,13 @@
 				 $('input[type=radio][name=qoption]').change(function() {
 					    $('#saveQuestion').removeAttr('disabled');
 				    }); 
-        	} else if (jsonQuestion.questionType=="4") {
+        	}
+			else if (jsonQuestion.questionType=="2") {
+				 $('input[type=checkbox][name=qoption]').change(function() {
+					    $('#saveQuestion').removeAttr('disabled');
+				   });
+			  }
+        	else if (jsonQuestion.questionType=="4") {
         		$('#qanswer').focus();
         		$('#qanswer').blur(function(){
         			
