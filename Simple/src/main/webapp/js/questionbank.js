@@ -690,8 +690,8 @@ $(document).ready(function(){
 		$('#butAddQuestion').unbind().click(function(){
 			var questionTypeVal=$( "#qb-questionType option:selected").val();
 			
-			if (questionTypeVal=="1") {
-				addMultipleChoiceSingleSelect();
+			if (questionTypeVal=="1" || questionTypeVal=="2") {
+				addMultipleChoiceSingleOrMultiSelect(); // this method applies for both single-select and multi-select type of questions 
 			} else if (questionTypeVal=="4") {
 				addFillInBlank();
 			}
@@ -787,7 +787,7 @@ $(document).ready(function(){
 		}
 			
 		//$('#butAddQuestion').unbind().click(function(){
-		function addMultipleChoiceSingleSelect() {
+		function addMultipleChoiceSingleOrMultiSelect() {
 			document.getElementById('qb-addQuestions').style.display='block';
 			var levelVal=$( "#level option:selected").val();
 			var levelText=$( "#level option:selected").html();
